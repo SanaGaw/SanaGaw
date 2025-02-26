@@ -1,0 +1,26 @@
+Below is a concise table illustrating nine “synthetic” regional parameter sets, each with a brief rationale for why those numbers make sense historically/anthropologically. You can use these as baselines and refine further with real data later.
+
+Region	#Citizens	#Bureaucrats	Rounds	Salary	Bribe	Invest. Rate	Invest. Cost	initCorrCit	initCorrBur	initBudget	Rationale
+Scandinavian	100	20	12	8	1	15	3	0.10	0.05	1500	Low corruption tradition; strong rule of law, high transparency. Higher budget & proactive investigations reflect robust state capacity. Bribes minimal.
+Northern America	100	20	12	6	2	10	4	0.15	0.10	1200	Generally low–moderate corruption. Good enforcement resources but not as high as Scandinavia. Slightly higher bribe amount.
+South America	100	20	12	4	3	8	2	0.35	0.30	800	Some countries have moderate–high corruption in public sector. Budget smaller. Bribes a bit larger. Investigations less frequent, reflecting partial institutional strength.
+Middle East	100	20	12	4	4	7	3	0.40	0.35	900	Historically moderate–high corruption in some states, budgets vary widely but we assume moderate. Bribe amounts higher. Investigations exist but not at high levels.
+Asia	150	30	12	4	2	10	2	0.25	0.20	1000	Large population (hence more citizens/bureaucrats). Moderate corruption, moderate bribe amounts, decent budget. Investigations somewhat frequent, cost is moderate.
+Mediterranean (EU)	100	20	12	6	2	9	3	0.20	0.15	900	Countries in Southern EU often have moderate corruption levels—still below many global averages. Budget is decent, bribes not too large, moderate investigation frequency.
+Africa	100	20	12	3	3	6	2	0.45	0.40	700	Many states have lower budgets, higher baseline corruption. Investigations exist but cost is lower. Salary is minimal. Higher proportion of corruption among citizens/bureaucrats.
+Post-Soviet	100	20	12	4	4	8	2	0.30	0.35	1000	Some residual structures from Soviet legacy can yield moderate–high bureaucratic corruption. Budget is mid-range. Bribe amounts are fairly large. Investigations are moderately frequent/costly.
+South Korea	120	25	12	7	2	12	3	0.20	0.25	1300	Historically had corruption in chaebols/govt, but modern crackdowns. Higher salary vs. some regions. Investigations fairly proactive. Bribe amounts moderate.
+How to Use This Table
+Rows: Each row corresponds to a synthetic region with approximate corruption contexts.
+Columns: Show the parameters you’ll set in params = {...} for your ABM:
+num_citizens: total citizens.
+num_bureaucrats: total bureaucrats.
+rounds: how many steps your simulation runs.
+salary: how much each bureaucrat is paid per round.
+bribe_amount: how much a citizen pays a corrupt bureaucrat each bribe.
+investigation_rate: how many bureaucrats are randomly investigated each round.
+investigation_cost: cost to investigate each bureaucrat.
+initial_corruption_citizens / bureaucrats: fraction that begins corrupt.
+initial_budget: starting budget for your institution.
+Rationale: short notes on why these numbers suit that region’s corruption patterns.
+Adjust any values to better match specific data or to test alternative scenarios (e.g., higher budgets, more or fewer rounds, bigger or smaller populations). These synthetic sets are just a baseline to highlight differences across global regions for your corruption-model simulation.
