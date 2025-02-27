@@ -1,88 +1,75 @@
-# Agent-Based Simulation of Institutional Governance and Bureaucratic Behavior
+### Agent-Based Simulation of Corruption and Institutional Governance
+## Overview
+This simulation is an agent-based model (ABM) designed to explore the dynamics of corruption and governance within public institutions. It simulates interactions between citizens, bureaucrats, and an overseeing institution to capture how corruption emerges, evolves, and can be controlled through various enforcement strategies. By adjusting parameters such as bribe amounts, investigation rates, salaries, and initial corruption levels, users can simulate different regional or historical governance scenarios—ranging from a high-integrity, low-corruption environment to settings where corruption is deeply entrenched yet managed for results. The model offers a flexible framework for understanding the interplay between institutional credibility, citizen satisfaction, and bureaucratic behavior.
 
-## 1. Overview
-This repository contains an agent-based model (ABM) that simulates interactions between citizens, bureaucrats, and an overseeing institution. The model focuses on how corruption emerges or is contained, how institutional credibility evolves, and how different governance strategies impact overall outcomes.
+## Detailed Description
+# Purpose and Scope
+This simulation provides a virtual environment to analyze how corruption develops and is mitigated within bureaucratic institutions. It is aimed at researchers, policymakers, and educators interested in:
 
-### Core Features
-- Dynamic decision-making by bureaucrats (corrupt vs. honest) based on investigations and earnings.
-- Citizens who can be honest or corrupt, offering or refusing bribes.
-- An institution that adapts its investigation strategy to manage resources and limit corruption.
+Investigating Corruption Dynamics: Understanding how dishonest practices emerge among citizens and bureaucrats.
+Evaluating Institutional Responses: Exploring how an overseeing institution can allocate resources to distribute salaries and conduct investigations.
+Comparing Governance Strategies: Simulating different anti-corruption approaches (e.g., proactive versus reactive enforcement) and regional governance models.
+Core Entities and Their Roles
+The model consists of three primary types of agents, each with distinct roles and interactions:
 
-## 2. Conceptual Model
+# Citizens
 
-### 2.1 Entities
-1. **Citizens**
-   - May be honest or corrupt.
-   - Provide feedback (satisfaction) based on service quality.
-   - Switch behavior type (honest ↔ corrupt) under certain conditions (e.g., repeated delays or failed bribes).
+Role: Citizens are service users who may either behave honestly or engage in corrupt practices by offering bribes.
+Behavior: They request services, experience delays when interacting with corrupt bureaucrats, and can change their behavior based on their personal experiences and the influence of their social network (neighbors).
+# Bureaucrats
 
-2. **Bureaucrats**
-   - Can be honest (reject bribes) or corrupt (accept bribes, delay honest citizens).
-   - Earn tokens through honest service or bribes.
-   - Switch behavior if investigations increase perceived risk or if corrupt earnings outpace honest earnings.
+Role: Bureaucrats are the public officials responsible for providing services.
+Behavior: They can act honestly—delivering prompt service and earning standard tokens—or corruptly—accepting bribes, delaying services, and earning extra tokens from illicit transactions. Their state (honest vs. corrupt) can shift based on the risk of investigations and social influences from their peers.
+Institution
 
-3. **Institution**
-   - Maintains an “Institutional Credibility” (IC) score.
-   - Conducts investigations at a cost of tokens.
-   - Confiscates ill-gotten gains if corrupt bureaucrats are reported.
-   - Shifts enforcement strategies according to resource availability and corruption levels.
+Role: The institution represents the governing body overseeing bureaucratic operations.
+Functions: It distributes salaries to bureaucrats, manages an institutional budget, and conducts investigations to detect and penalize corrupt behavior. The institution’s credibility is central to its ability to enforce rules and maintain public trust.
+Simulation Mechanics and Workflow
+The simulation runs in discrete rounds, each capturing a cycle of interactions and institutional actions:
 
-### 2.2 Key Parameters
-- **Num_Bureaucrats:** Total number of bureaucrats in the system.
-- **Num_Citizens:** Total number of citizens requesting services each round.
-- **Initial_Corruption_Rate:** Fraction of bureaucrats (and/or citizens) starting out corrupt.
-- **Investigation_Cost:** The token cost of investigating one bureaucrat.
-- **Bribe_Amount:** The token amount a corrupt bureaucrat receives from a bribing citizen.
-- **Honest_Earning:** The token amount an honest bureaucrat earns per successful service.
-- **Satisfaction_Target:** Initial satisfaction level the institution aims to maintain.
-- **IC_Threshold (0.4):** Institutional credibility cutoff that triggers more reactive enforcement.
+# Initialization
 
-### 2.3 Simulation Flow (Each Round)
-1. **Citizen-Bureaucrat Interactions:**
-   - Citizens queue for service; bureaucrats handle up to 5 interactions per round.
-   - Corrupt bureaucrats may delay honest citizens or take bribes from corrupt citizens.
-   - Satisfaction is calculated (+1, 0, or -1) and used to update Institutional Credibility.
+Agent Creation: Citizens and bureaucrats are created based on user-defined parameters, with initial corruption levels determining their starting states.
+Social Networks: Each agent is assigned a set of random “neighbors” to simulate social influence, affecting future behavior changes.
+Citizen–Bureaucrat Interactions
 
-2. **Institutional Enforcement:**
-   - Institution checks available resources (IC) and decides how many bureaucrats to investigate.
-   - Bureaucrats under investigation and found corrupt lose tokens; the institution recoups some resources (unless the bureaucrat is falsely accused).
+Service Delivery: Citizens request services and are randomly paired with bureaucrats.
+Outcome Determination: If both citizen and bureaucrat are honest, the service is delivered promptly. However, if a corrupt bureaucrat interacts with an honest citizen, the service is delayed (with negative impacts on satisfaction). In cases where both are corrupt, bribes are exchanged, reinforcing corrupt behavior.
+Salary Distribution
 
-3. **Adaptation & Strategy Updates:**
-   - **Bureaucrats:** May switch between honest/corrupt behavior based on investigatory risk or peer investigations.
-   - **Institution:** Adjusts strategy (pragmatic, corruption-minimizing, firefighting) depending on scenario or policy setting.
-   - **Satisfaction Target:** Adjusted by ±3% if average satisfaction is above/below the current target.
+Institutional Payment: The institution uses its budget to pay salaries to bureaucrats, which reinforces honest behavior when sufficient funds are available.
+Investigations
 
-4. **Update Metrics:**
-   - Institutional Credibility (IC) is recalculated.
-   - Overall corruption rate, average satisfaction, and resource usage are recorded for analysis.
+Enforcement Mechanism: A subset of bureaucrats is randomly selected for investigation. Each investigation has an associated cost, and if a bureaucrat is found to be corrupt, their accumulated tokens (representing illicit gains) are confiscated. This process not only punishes corruption but also resets the bureaucrat’s state to honest.
+Social Influence and Behavioral Updates
 
-### 2.4 Governance Strategies
-1. **Pragmatic:** 
-   - Investigate bureaucrats below satisfaction targets, prioritize confiscating high token reserves.
+Dynamic Adaptation: Both citizens and bureaucrats adjust their behavior based on social influence—observing the state of their neighbors—and based on their experiences (such as delays or successful bribe exchanges). This mechanism captures the real-world notion that behavior can spread through communities.
+Metric Logging
 
-2. **Corruption-Minimizing:**
-   - Investigate all bureaucrats with bribe acceptance rates > 10%, ignoring token reserves.
+Outcome Recording: After each round, the simulation logs key metrics including the overall corruption level among bureaucrats, institutional budget, average citizen satisfaction, and total tokens accumulated by bureaucrats. These metrics facilitate detailed post-simulation analysis.
+Parameterization and Governance Strategies
+The simulation is highly configurable, allowing users to tailor scenarios by adjusting parameters such as:
 
-3. **Firefighting:**
-   - Investigate only if **IC < 0.4** or **corruption > 30%**. Otherwise, minimize spending on investigations.
+Agent Counts: Number of citizens and bureaucrats.
+Economic Variables: Salary levels, bribe amounts, and investigation costs.
+Corruption Settings: Initial corruption rates for both citizens and bureaucrats.
+Institutional Settings: Investigation rate and starting budget.
+Simulation Duration: Total number of rounds.
+Additionally, a supplemental parameter table provides synthetic regional scenarios (e.g., Scandinavian, South American, Middle Eastern, South Korean) that offer historical and anthropological rationales for different parameter settings. These baselines enable users to simulate and compare how various regions might experience and control corruption differently.
 
-## 3. Usage Instructions
-1. **Setup Parameters:** Edit the `config.py` (or wherever you store parameters) to define your scenario (e.g., number of bureaucrats, initial corruption rate, etc.).
-2. **Choose a Strategy:** Set the governance strategy in the main simulation file or via a command-line argument.
-3. **Run the Simulation:** Execute the main simulation script (e.g., `python run.py`) to generate outputs (e.g., logs, CSV results).
-4. **Analyze Results:** Use the built-in plotting or analysis tools to visualize changes in corruption, satisfaction, and institutional credibility over time.
+Simulating Different Governance Models
+By modifying key parameters, the model can mimic various governance strategies:
 
-## 4. Extending the Model
-- **Parameter Sweeps:** You can run multiple simulations, varying parameters such as `Investigation_Cost` or `Bribe_Amount` to see how outcomes shift.
-- **Additional Metrics:** Track more nuanced measures like the distribution of citizen satisfaction or the Gini coefficient of bureaucrat earnings.
+Pragmatic Approach: The institution focuses on investigating bureaucrats when citizen satisfaction dips, prioritizing those with high token reserves.
+Corruption-Minimizing Approach: Investigations target bureaucrats with a high rate of bribe acceptance, regardless of their token balance, to systematically reduce corruption.
+Firefighting Approach: Intensive investigations are triggered only when institutional credibility falls below a threshold or when overall corruption exceeds a predefined limit.
+Such flexibility allows users to explore the impact of different enforcement strategies on corruption dynamics and institutional performance over time.
 
-## 5. License
-(Include your chosen license here, e.g., MIT License, GPLv3, etc.)
+User Interface and Execution
+A Streamlit-based GUI offers an intuitive front-end for:
 
-## 6. Contributing
-- Pull requests and bug fixes are welcome.
-- Please open an issue for major feature proposals or questions.
-
-## 7. Contact
-(Include your email or relevant contact info if desired.)
-
+Interactive Parameter Adjustment: Users can modify simulation settings via sliders and input fields.
+Real-Time Visualization: Simulation outcomes are displayed as tables and charts, illustrating trends in corruption levels, institutional budgets, and satisfaction metrics.
+Result Analysis: The interface enables easy interpretation of how changes in parameters affect the system, providing valuable insights for hypothesis testing and policy simulation.
+Conclusion
+This agent-based simulation model provides a robust platform for exploring the complex interplay between corruption, bureaucratic behavior, and institutional governance. It not only offers a means to simulate various corruption scenarios but also enables comparative studies of different governance strategies across diverse regional contexts. By understanding the relationships among citizens, bureaucrats, and the governing institution, users can gain deep insights into how policies and cultural factors interact to shape the integrity and efficiency of public administration.
