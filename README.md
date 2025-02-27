@@ -1,75 +1,99 @@
-### Agent-Based Simulation of Corruption and Institutional Governance
-## Overview
+# Agent-Based Simulation of Corruption and Institutional Governance
+
+## Abstract
 This simulation is an agent-based model (ABM) designed to explore the dynamics of corruption and governance within public institutions. It simulates interactions between citizens, bureaucrats, and an overseeing institution to capture how corruption emerges, evolves, and can be controlled through various enforcement strategies. By adjusting parameters such as bribe amounts, investigation rates, salaries, and initial corruption levels, users can simulate different regional or historical governance scenarios—ranging from a high-integrity, low-corruption environment to settings where corruption is deeply entrenched yet managed for results. The model offers a flexible framework for understanding the interplay between institutional credibility, citizen satisfaction, and bureaucratic behavior.
 
 ## Detailed Description
-# Purpose and Scope
+
+### Purpose and Scope
 This simulation provides a virtual environment to analyze how corruption develops and is mitigated within bureaucratic institutions. It is aimed at researchers, policymakers, and educators interested in:
+- **Investigating Corruption Dynamics:** Understand how dishonest practices emerge among citizens and bureaucrats.
+- **Evaluating Institutional Responses:** Explore how an overseeing institution can allocate resources to distribute salaries and conduct investigations.
+- **Comparing Governance Strategies:** Simulate different anti-corruption approaches (e.g., proactive versus reactive enforcement) and regional governance models.
 
-Investigating Corruption Dynamics: Understanding how dishonest practices emerge among citizens and bureaucrats.
-Evaluating Institutional Responses: Exploring how an overseeing institution can allocate resources to distribute salaries and conduct investigations.
-Comparing Governance Strategies: Simulating different anti-corruption approaches (e.g., proactive versus reactive enforcement) and regional governance models.
-Core Entities and Their Roles
-The model consists of three primary types of agents, each with distinct roles and interactions:
+### Core Entities and Their Roles
+The model consists of three primary types of agents:
 
-# Citizens
+1. **Citizens**
+   - **Role:** Service users who can behave honestly or engage in corrupt practices by offering bribes.
+   - **Behavior:** Request services, experience delays when interacting with corrupt bureaucrats, and may change behavior based on personal experiences and social influence from neighbors.
 
-Role: Citizens are service users who may either behave honestly or engage in corrupt practices by offering bribes.
-Behavior: They request services, experience delays when interacting with corrupt bureaucrats, and can change their behavior based on their personal experiences and the influence of their social network (neighbors).
-# Bureaucrats
+2. **Bureaucrats**
+   - **Role:** Public officials responsible for service delivery.
+   - **Behavior:** Operate honestly (delivering prompt service and earning standard tokens) or corruptly (accepting bribes and delaying services). Their state can shift depending on investigation risks and peer influence.
 
-Role: Bureaucrats are the public officials responsible for providing services.
-Behavior: They can act honestly—delivering prompt service and earning standard tokens—or corruptly—accepting bribes, delaying services, and earning extra tokens from illicit transactions. Their state (honest vs. corrupt) can shift based on the risk of investigations and social influences from their peers.
-Institution
+3. **Institution**
+   - **Role:** The governing body that oversees bureaucratic operations.
+   - **Functions:** Distributes salaries, manages an institutional budget, and conducts investigations to detect and penalize corrupt behavior. Institutional credibility is central to its capacity to enforce rules and maintain public trust.
 
-Role: The institution represents the governing body overseeing bureaucratic operations.
-Functions: It distributes salaries to bureaucrats, manages an institutional budget, and conducts investigations to detect and penalize corrupt behavior. The institution’s credibility is central to its ability to enforce rules and maintain public trust.
-Simulation Mechanics and Workflow
-The simulation runs in discrete rounds, each capturing a cycle of interactions and institutional actions:
+### Simulation Mechanics and Workflow
+The simulation operates in discrete rounds, each representing a cycle of interactions and institutional actions:
 
-# Initialization
+1. **Initialization**
+   - **Agent Creation:** Citizens and bureaucrats are created based on user-defined parameters, with initial corruption levels determining their starting states.
+   - **Social Networks:** Each agent is assigned a set of random neighbors to simulate social influence, which will affect future behavior.
 
-Agent Creation: Citizens and bureaucrats are created based on user-defined parameters, with initial corruption levels determining their starting states.
-Social Networks: Each agent is assigned a set of random “neighbors” to simulate social influence, affecting future behavior changes.
-Citizen–Bureaucrat Interactions
+2. **Citizen–Bureaucrat Interactions**
+   - **Service Delivery:** Citizens request services and are randomly paired with bureaucrats.
+   - **Outcome Determination:** 
+     - If both citizen and bureaucrat are honest, the service is delivered promptly.
+     - If a corrupt bureaucrat interacts with an honest citizen, the service is delayed (resulting in decreased satisfaction).
+     - If both are corrupt, bribes are exchanged, reinforcing corrupt behavior.
 
-Service Delivery: Citizens request services and are randomly paired with bureaucrats.
-Outcome Determination: If both citizen and bureaucrat are honest, the service is delivered promptly. However, if a corrupt bureaucrat interacts with an honest citizen, the service is delayed (with negative impacts on satisfaction). In cases where both are corrupt, bribes are exchanged, reinforcing corrupt behavior.
-Salary Distribution
+3. **Salary Distribution**
+   - The institution pays salaries to bureaucrats using its available budget, reinforcing honest behavior when funds are sufficient.
 
-Institutional Payment: The institution uses its budget to pay salaries to bureaucrats, which reinforces honest behavior when sufficient funds are available.
-Investigations
+4. **Investigations**
+   - **Enforcement Mechanism:** A subset of bureaucrats is randomly selected for investigation at a cost. If a bureaucrat is found corrupt, their accumulated tokens are confiscated and the bureaucrat's state resets to honest.
 
-Enforcement Mechanism: A subset of bureaucrats is randomly selected for investigation. Each investigation has an associated cost, and if a bureaucrat is found to be corrupt, their accumulated tokens (representing illicit gains) are confiscated. This process not only punishes corruption but also resets the bureaucrat’s state to honest.
-Social Influence and Behavioral Updates
+5. **Social Influence and Behavioral Updates**
+   - **Dynamic Adaptation:** Both citizens and bureaucrats adjust their behavior based on experiences (such as delays or successful bribe exchanges) and the influence of their neighbors.
 
-Dynamic Adaptation: Both citizens and bureaucrats adjust their behavior based on social influence—observing the state of their neighbors—and based on their experiences (such as delays or successful bribe exchanges). This mechanism captures the real-world notion that behavior can spread through communities.
-Metric Logging
+6. **Metric Logging**
+   - After each round, key metrics are logged:
+     - Overall corruption level among bureaucrats.
+     - Institutional budget.
+     - Average citizen satisfaction.
+     - Total tokens accumulated by bureaucrats.
+   - These metrics facilitate detailed analysis post-simulation.
 
-Outcome Recording: After each round, the simulation logs key metrics including the overall corruption level among bureaucrats, institutional budget, average citizen satisfaction, and total tokens accumulated by bureaucrats. These metrics facilitate detailed post-simulation analysis.
-Parameterization and Governance Strategies
-The simulation is highly configurable, allowing users to tailor scenarios by adjusting parameters such as:
+### Parameterization and Governance Strategies
+The simulation is highly configurable. Key parameters include:
+- **Agent Counts:** Number of citizens and bureaucrats.
+- **Economic Variables:** Salary levels, bribe amounts, and investigation costs.
+- **Corruption Settings:** Initial corruption rates for citizens and bureaucrats.
+- **Institutional Settings:** Investigation rate and starting budget.
+- **Simulation Duration:** Total number of rounds.
 
-Agent Counts: Number of citizens and bureaucrats.
-Economic Variables: Salary levels, bribe amounts, and investigation costs.
-Corruption Settings: Initial corruption rates for both citizens and bureaucrats.
-Institutional Settings: Investigation rate and starting budget.
-Simulation Duration: Total number of rounds.
-Additionally, a supplemental parameter table provides synthetic regional scenarios (e.g., Scandinavian, South American, Middle Eastern, South Korean) that offer historical and anthropological rationales for different parameter settings. These baselines enable users to simulate and compare how various regions might experience and control corruption differently.
+Additionally, synthetic regional scenarios (e.g., Scandinavian, South American, Middle Eastern, South Korean) are provided as baselines. These offer historical and anthropological rationales for various parameter settings, enabling the simulation of distinct governance models.
 
-Simulating Different Governance Models
-By modifying key parameters, the model can mimic various governance strategies:
+### Simulating Different Governance Models
+By modifying key parameters, the model can emulate various strategies:
+- **Pragmatic Approach:** Focuses on investigating bureaucrats when citizen satisfaction falls, prioritizing those with high token reserves.
+- **Corruption-Minimizing Approach:** Targets bureaucrats with high bribe acceptance rates to systematically reduce corruption.
+- **Firefighting Approach:** Triggers intensive investigations only when institutional credibility drops below a threshold or overall corruption exceeds a predefined limit.
 
-Pragmatic Approach: The institution focuses on investigating bureaucrats when citizen satisfaction dips, prioritizing those with high token reserves.
-Corruption-Minimizing Approach: Investigations target bureaucrats with a high rate of bribe acceptance, regardless of their token balance, to systematically reduce corruption.
-Firefighting Approach: Intensive investigations are triggered only when institutional credibility falls below a threshold or when overall corruption exceeds a predefined limit.
-Such flexibility allows users to explore the impact of different enforcement strategies on corruption dynamics and institutional performance over time.
+These strategies allow users to explore how different enforcement policies impact corruption dynamics and institutional performance over time.
 
-User Interface and Execution
-A Streamlit-based GUI offers an intuitive front-end for:
+### User Interface and Execution
+A Streamlit-based GUI provides an intuitive interface for:
+- **Interactive Parameter Adjustment:** Modify simulation settings using sliders and input fields.
+- **Real-Time Visualization:** View simulation outcomes as tables and charts, showcasing trends in corruption levels, institutional budgets, and satisfaction metrics.
+- **Result Analysis:** Easily interpret how parameter changes affect the system, aiding in hypothesis testing and policy simulation.
 
-Interactive Parameter Adjustment: Users can modify simulation settings via sliders and input fields.
-Real-Time Visualization: Simulation outcomes are displayed as tables and charts, illustrating trends in corruption levels, institutional budgets, and satisfaction metrics.
-Result Analysis: The interface enables easy interpretation of how changes in parameters affect the system, providing valuable insights for hypothesis testing and policy simulation.
-Conclusion
-This agent-based simulation model provides a robust platform for exploring the complex interplay between corruption, bureaucratic behavior, and institutional governance. It not only offers a means to simulate various corruption scenarios but also enables comparative studies of different governance strategies across diverse regional contexts. By understanding the relationships among citizens, bureaucrats, and the governing institution, users can gain deep insights into how policies and cultural factors interact to shape the integrity and efficiency of public administration.
+## Conclusion
+This agent-based simulation model provides a robust platform for exploring the complex interplay between corruption, bureaucratic behavior, and institutional governance. It not only enables the simulation of various corruption scenarios but also allows for comparative studies of different governance strategies across diverse regional contexts. By understanding the relationships among citizens, bureaucrats, and the overseeing institution, users can gain deep insights into how policies and cultural factors interact to shape the integrity and efficiency of public administration.
+
+## Getting Started
+1. **Setup Parameters:** Adjust simulation parameters (e.g., number of agents, corruption rates) via the provided GUI or configuration files.
+2. **Choose a Strategy:** Select the desired governance strategy either through the main simulation script or via command-line arguments.
+3. **Run the Simulation:** Execute the simulation (e.g., `python run.py`) to generate outputs such as logs and visualizations.
+4. **Analyze Results:** Use the built-in plotting tools to visualize trends in corruption, satisfaction, and institutional performance over time.
+
+## Extending the Model
+- **Parameter Sweeps:** Run multiple simulations varying key parameters to explore different outcomes.
+- **Additional Metrics:** Extend logging to include more detailed measures, such as the distribution of citizen satisfaction or inequality in bureaucrat earnings.
+- **Custom Governance Strategies:** Implement new strategies to explore alternative approaches to corruption management.
+
+## Contributing
+Contributions are welcome! Please submit pull requests, open issues for feature proposals, or bug reports. For major changes, please discuss via an issue first.
