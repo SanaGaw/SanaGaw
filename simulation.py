@@ -1,15 +1,10 @@
 import random
-import sys
 
 ######################################################
 # INITIALIZATION
 ######################################################
 def initialize_simulation(params):
-    """
-    Initializes citizens and bureaucrats with their initial states.
-    Uses 'initial_corruption_citizens' and 'initial_corruption_bureaucrats'
-    to define how many start off corrupt.
-    """
+    """ Initializes citizens and bureaucrats with their initial states. """
     num_citizens = params['num_citizens']
     num_bureaucrats = params['num_bureaucrats']
 
@@ -22,11 +17,8 @@ def initialize_simulation(params):
             'state': 'bribe_offering' if is_corrupt else 'honest',
             'needs_service': True,
             'waiting_time': 0,
-            # Will store references to other citizen IDs
             'neighbors': [],
-            # Additional flag to mark if they were delayed this round
             'was_delayed_this_round': False,
-            # Optional satisfaction tracking
             'satisfaction': 0
         })
 
@@ -39,7 +31,7 @@ def initialize_simulation(params):
             'state': 'corrupt' if is_corrupt else 'honest',
             'tokens': 0,
             'investigations': 0,
-            'neighbors': [],  # <--- MISSING COMMA FIXED
+            'neighbors': [],
             'satisfaction': 0
         })
 
@@ -58,65 +50,52 @@ def initialize_simulation(params):
 # INTERACTIONS
 ######################################################
 def handle_interactions(citizens, bureaucrats, params):
-    """
-    Each citizen attempts to get service from a random bureaucrat.
-    If an honest citizen meets a corrupt bureau => delayed => becomes corrupt NEXT round
-    """
-
+    """ Handles interactions between citizens and bureaucrats. """
     for citizen in citizens:
-        citizen['was_delayed_this_round'] = False  # reset each round
+        citizen['was_delayed_this_round'] = False
 
     for citizen in citizens:
         if citizen['needs_service'] and bureaucrats:
             bureau = random.choice(bureaucrats)
             if citizen['state'] == 'honest':
                 if bureau['state'] == 'honest':
-                    # immediate service
                     citizen['needs_service'] = False
                     bureau['satisfaction'] += 1
                 else:
-                    # corrupt => wait
                     citizen['waiting_time'] += 1
                     citizen['was_delayed_this_round'] = True
                     bureau['satisfaction'] -= 1
-            else:  # bribe_offering
+            else:
                 if bureau['state'] == 'corrupt':
-                    # bribe occurs
                     bureau['tokens'] += params['bribe_amount']
                     citizen['needs_service'] = False
-                    # bureau['satisfaction'] += 0 (if needed)
                 else:
-                    # honest bureau => serve anyway
                     citizen['needs_service'] = False
                     bureau['satisfaction'] += 1
                     bureau['state'] = 'corrupt'
 
 ######################################################
-# SALARY
+# SALARY DISTRIBUTION
 ######################################################
 def distribute_salaries(bureaucrats, institution, params):
-    """
-    Pay each bureaucrat from the institution budget if possible.
-    """
+    """ Pays bureaucrats from the institution budget if possible. """
     total_salary = params['salary'] * len(bureaucrats)
-    institution['budget'] -= total_salary
-    for b in bureaucrats:
-        b['tokens'] += params['salary']
+    if institution['budget'] >= total_salary:
+        institution['budget'] -= total_salary
+        for b in bureaucrats:
+            b['tokens'] += params['salary']
+
 ######################################################
 # INVESTIGATIONS
 ######################################################
 def handle_investigations(bureaucrats, institution, params):
-    """
-    Investigate some bureaucrats. If corrupt, confiscate tokens & turn honest.
-    """
+    """ Investigates bureaucrats and confiscates tokens if corrupt. """
     num_to_investigate = min(len(bureaucrats), params['investigation_rate'])
     cost = num_to_investigate * params['investigation_cost']
 
     if institution['budget'] < cost:
-        # not enough budget to investigate
         return [], 0
 
-    
     chosen = random.sample(bureaucrats, num_to_investigate)
     confiscated = 0
 
@@ -135,67 +114,28 @@ def handle_investigations(bureaucrats, institution, params):
 # SOCIAL INFLUENCE & RE-CORRUPTION
 ######################################################
 def update_social_influence(citizens, bureaucrats, last_round_investigations, params):
-    """
-    CITIZENS:
-      - If delayed => becomes corrupt in NEXT round
-      - If 3 out of 5 neighbors are corrupt => immediate corrupt
-
-    BUREAUCRATS:
-      - If not enough investigations => revert to corrupt if 3 neighbors are corrupt
-    """
-
-    # 1) CITIZENS
+    """ Updates corruption trends based on investigations and social influence. """
     for c in citizens:
-        # immediate corruption if 3/5 neighbors are bribe_offering
-        corrupt_neighbors = 0
-        for n_id in c['neighbors']:
-            if n_id < len(citizens):
-                if citizens[n_id]['state'] == 'bribe_offering':
-                    corrupt_neighbors += 1
-        if corrupt_neighbors >= 3:
+        corrupt_neighbors = sum(1 for n_id in c['neighbors'] if citizens[n_id]['state'] == 'bribe_offering')
+        if corrupt_neighbors >= 3 or c['was_delayed_this_round']:
             c['state'] = 'bribe_offering'
 
-        # if delayed, become corrupt next round
-        if c['was_delayed_this_round']:
-            c['state'] = 'bribe_offering'
-
-    # 2) BUREAUCRATS REVERT
     threshold = len(bureaucrats) * 0.5
     not_enough_pressure = (last_round_investigations < threshold)
     for b in bureaucrats:
         if b['state'] == 'honest' and not_enough_pressure:
-            # count corrupt neighbors
-            corrupt_neighbors = sum(1 for nb_id in b['neighbors']
-                                    if nb_id < len(bureaucrats)
-                                    and bureaucrats[nb_id]['state'] == 'corrupt')
+            corrupt_neighbors = sum(1 for nb_id in b['neighbors'] if bureaucrats[nb_id]['state'] == 'corrupt')
             if corrupt_neighbors >= 3:
                 b['state'] = 'corrupt'
 
 ######################################################
-# MAIN
+# MAIN SIMULATION FUNCTION
 ######################################################
-if __name__ == '__main__':
-    params = {
-        'num_citizens': 100,
-        'num_bureaucrats': 20,
-        'rounds': 12,
-        'salary': 5,
-        'bribe_amount': 1,
-        'investigation_rate': 13,
-        'investigation_cost': 3,
-        'initial_corruption_citizens': 0.3,
-        'initial_corruption_bureaucrats': 0.3,
-        'initial_budget': 1000
-    }
-
-    # Initialize
+def run_simulation(params):
+    """ Runs the full corruption simulation and returns results. """
     citizens, bureaucrats = initialize_simulation(params)
     institution = {'budget': params['initial_budget']}
-
     logs = []
-
-    print("\n--- Simulation Starting ---")
-    sys.stdout.flush()
 
     for round_num in range(1, params['rounds'] + 1):
         handle_interactions(citizens, bureaucrats, params)
@@ -205,7 +145,7 @@ if __name__ == '__main__':
         update_social_influence(citizens, bureaucrats, last_round_investigations, params)
 
         corruption_level = sum(b['state'] == 'corrupt' for b in bureaucrats) / len(bureaucrats)
-        avg_satisfaction = (sum(c['satisfaction'] for c in citizens) / len(citizens)) if citizens else 0
+        avg_satisfaction = sum(c['satisfaction'] for c in citizens) / len(citizens) if citizens else 0
         total_tokens = sum(b['tokens'] for b in bureaucrats)
 
         logs.append({
@@ -218,17 +158,4 @@ if __name__ == '__main__':
             'bureaucrat_tokens': total_tokens
         })
 
-        print(f"Round {round_num}: Budget={institution['budget']}, "
-              f"Corruption={corruption_level:.2f}, "
-              f"Confiscated={confiscated}, Investigated={last_round_investigations}, "
-              f"AvgSatisfaction={avg_satisfaction:.2f}, BureauTokens={total_tokens}")
-        sys.stdout.flush()
-
-    print("\n--- Simulation Complete ---")
-    sys.stdout.flush()
-
-    # Print final log
-    print("\nSimulation Log:")
-    for row in logs:
-        print(row)
-        sys.stdout.flush()
+    return logs
